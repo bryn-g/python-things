@@ -5,6 +5,10 @@ import click
 import colorama
 from colorama import Fore, Back, Style
 
+'''
+a simple weather script using the open weather map api.
+'''
+
 def print_json(json_block, sort=True, indents=4):
     if type(json_block) is str:
         print(json.dumps(json.loads(json_block), sort_keys=sort, indent=indents))
@@ -25,18 +29,19 @@ def print_current_weather(location, api_key, units, json, query):
     response = requests.get(owm_api_url, params=query_params)
 
     if query:
-        print(f"api query: {response.url}")
+        print(f"{Fore.YELLOW}api query: {Fore.WHITE}{response.url}")
 
     if json:
+        print(f"{Fore.YELLOW}response json:")
         print_json(response.json())
     else:
         if response.json()['cod'] is not 200:
-            print("{0}Error:".format(Fore.RED))
+            print(f"{Fore.RED}error:")
             print_json(response.json())
-            print("{0}exiting.".format(Fore.RED))
             exit()
 
         name = response.json()['name']
+        country = response.json()['sys']['country']
         temp = response.json()['main']['temp']
         weather = response.json()['weather'][0]['description']
 
@@ -48,6 +53,7 @@ def print_current_weather(location, api_key, units, json, query):
 
         pad_to = 13
         print("{0}{1:<{2}s}{3}{4}".format(Fore.MAGENTA, "location:", pad_to, Fore.WHITE, name))
+        print("{0}{1:<{2}s}{3}{4}".format(Fore.BLUE, "country:", pad_to, Fore.WHITE, country))
         print("{0}{1:<{2}s}{3}{4:.1f}°{5}".format(Fore.GREEN, "temperature:", pad_to, Fore.WHITE, \
             temp, temp_unit))
         print("{0}{1:<{2}s}{3}{4}".format(Fore.CYAN, "weather:", pad_to, Fore.WHITE, weather))
