@@ -3,6 +3,8 @@
 🐍 Pieces of Python code and things.
 #### weather.py
 ```python (3.6)``` ```click (6.7)``` ```colorama (0.3.9)```
+
+Based on [Writing CLI Tools with Click](https://dbader.org/blog/python-commandline-tools-with-click) tutorial by Seb Vetter.
 ```sh
 Usage: weather.py [OPTIONS] LOCATION
 
