@@ -3,10 +3,14 @@
 🐍 Pieces of Python code and things.
 #### weather.py
 ```python (3.6)``` ```click (6.7)``` ```colorama (0.3.9)```
-
-A simple weather script using the [open weather map api](http://openweathermap.org/api).
 ```sh
 Usage: weather.py [OPTIONS] LOCATION
+
+  A simple weather script using the open weather map api. Location accepts a
+  town/city name and optionally a country code. e.g 'Melbourne' or
+  'Melbourne, AU'
+
+  API reference: http://openweathermap.org/api
 
 Options:
   -a, --api-key TEXT              open weather map api key
