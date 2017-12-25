@@ -5,10 +5,6 @@ import click
 import colorama
 from colorama import Fore, Back, Style
 
-'''
-a simple weather script using the open weather map api.
-'''
-
 def print_json(json_block, sort=True, indents=4):
     if type(json_block) is str:
         print(json.dumps(json.loads(json_block), sort_keys=sort, indent=indents))
@@ -78,6 +74,12 @@ def print_current_weather(location, api_key, units, json, query):
     help='print api query'
 )
 def main(location, api_key, units, json, query):
+    """
+    A simple weather script using the open weather map api. Location accepts a town/city name and
+    optionally a country code. e.g 'Melbourne' or 'Melbourne, AU'
+
+    API reference: http://openweathermap.org/api
+    """
     colorama.init(autoreset=True)
 
     if api_key:
