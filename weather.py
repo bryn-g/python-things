@@ -1,4 +1,5 @@
 import os
+import datetime
 import requests
 import json
 import click
@@ -13,7 +14,10 @@ def print_json(json_block, sort=True, indents=4):
 
     return None
 
-def print_current_weather(location, api_key, units, json, query):
+def print_formatted_string(field_color, field_name, pad_to, value_color, value):
+    print(f"{field_color}{field_name:<{pad_to}s}{value_color}{value}")
+
+def print_current_weather(location, api_key, units, time, json, query):
     owm_api_url = 'https://api.openweathermap.org/data/2.5/weather'
 
     query_params = {
@@ -31,15 +35,39 @@ def print_current_weather(location, api_key, units, json, query):
         print(f"{Fore.YELLOW}response json:")
         print_json(response.json())
     else:
-        if response.json()['cod'] is not 200:
-            print(f"{Fore.RED}error:")
-            print_json(response.json())
+        response_code = response.json()['cod']
+
+        if response_code is not 200:
+            response_message = response.json()['message']
+            print(f"{Fore.RED}error: {Fore.WHITE}({response_code}) {response_message}")
             exit()
 
-        name = response.json()['name']
+        city = response.json()['name']
+        #city_id = response.json()['id']
+
+        unix_timestamp = response.json()['dt']
+        if time == 'utc':
+            weather_time = datetime.datetime.utcfromtimestamp(int(unix_timestamp))
+        else:
+            weather_time = datetime.datetime.fromtimestamp(int(unix_timestamp))
+
+        weather_time = weather_time.strftime('%Y-%m-%d %H:%M')
+
         country = response.json()['sys']['country']
+
+        # sunrise_unix_timestamp = response.json()['sys']['sunrise']
+        # sunrise = datetime.datetime.fromtimestamp(int(sunrise_unix_timestamp)).strftime('%H:%M')
+        # sunset_unix_timestamp = response.json()['sys']['sunset']
+        # sunset = datetime.datetime.fromtimestamp(int(sunset_unix_timestamp)).strftime('%H:%M')
+
         temp = response.json()['main']['temp']
-        weather = response.json()['weather'][0]['description']
+
+        weather = ""
+        for item in response.json()['weather']:
+            weather += item['description'] + ", "
+        weather = weather[:-2]
+
+        wind = response.json()['wind']['speed']
 
         temp_unit = 'K'
         if units == "metric":
@@ -48,11 +76,12 @@ def print_current_weather(location, api_key, units, json, query):
             temp_unit = 'F'
 
         pad_to = 13
-        print("{0}{1:<{2}s}{3}{4}".format(Fore.MAGENTA, "location:", pad_to, Fore.WHITE, name))
-        print("{0}{1:<{2}s}{3}{4}".format(Fore.BLUE, "country:", pad_to, Fore.WHITE, country))
-        print("{0}{1:<{2}s}{3}{4:.1f}°{5}".format(Fore.GREEN, "temperature:", pad_to, Fore.WHITE, \
-            temp, temp_unit))
-        print("{0}{1:<{2}s}{3}{4}".format(Fore.CYAN, "weather:", pad_to, Fore.WHITE, weather))
+        print(f"{Fore.MAGENTA}{'location:':<{pad_to}s}{Fore.WHITE}{city}")
+        print(f"{Fore.BLUE}{'country:':<{pad_to}s}{Fore.WHITE}{country}")
+        print(f"{Fore.YELLOW}{'time:':<{pad_to}s}{Fore.WHITE}{weather_time} ({time})")
+        print(f"{Fore.GREEN}{'temperature:':<{pad_to}s}{Fore.WHITE}{temp:.1f}°{temp_unit}")
+        print(f"{Fore.CYAN}{'weather:':<{pad_to}s}{Fore.WHITE}{weather}")
+        print(f"{Fore.RED}{'wind:':<{pad_to}s}{Fore.WHITE}{wind} m/s")
 
 @click.command()
 @click.argument('location')
@@ -63,7 +92,12 @@ def print_current_weather(location, api_key, units, json, query):
 @click.option(
     '--units', '-u', default='metric',
     type=click.Choice(['standard', 'metric', 'imperial']),
-    help='units of measurement '
+    help='units of measurement'
+)
+@click.option(
+    '--time', '-t', default='local',
+    type=click.Choice(['local', 'utc']),
+    help='print local or utc time'
 )
 @click.option(
     '--json', '-j', is_flag=True,
@@ -73,10 +107,10 @@ def print_current_weather(location, api_key, units, json, query):
     '--query', '-q', is_flag=True,
     help='print api query'
 )
-def main(location, api_key, units, json, query):
+def main(location, api_key, units, time, json, query):
     """
     A simple weather script using the open weather map api. Location accepts a town/city name and
-    optionally a country code. e.g 'Melbourne' or 'Melbourne, AU'
+    optionally an ISO 3166 country code. e.g 'Melbourne' or 'Melbourne, AU'
 
     API reference: http://openweathermap.org/api
     """
@@ -87,7 +121,7 @@ def main(location, api_key, units, json, query):
     else:
         owm_api_key = os.environ.get('OPENWEATHERMAP_KEY', 'None')
 
-    print_current_weather(location, owm_api_key, units, json, query)
+    print_current_weather(location, owm_api_key, units, time, json, query)
 
 if __name__ == "__main__":
     main()
