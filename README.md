@@ -1,6 +1,18 @@
 # python-things
 
 🐍 Pieces of Python code and things.
+#### text_colorizer.py
+```sh
+Usage: text_colorizer.py [OPTIONS] TEXT
+
+  A simple script to randomly colorize text.
+
+Options:
+  -b, --back   include back colors
+  -w, --words  color words instead of letters
+  -c, --case   randomize case of letters
+  --help       Show this message and exit.
+```
 #### weather.py
 ```python (3.6)``` ```click (6.7)``` ```colorama (0.3.9)```
 
