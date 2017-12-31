@@ -5,6 +5,19 @@
 ```python (3.6)``` ```click (6.7)```
 
 Uses a class called IroList to save colors by label. The word 'iro' is Japanese romanji for color.
+```python
+# code to set colors
+ansi_colorizer = ANSITextColorizer()
+term_colorizer = TermTextColorizer()
+
+# ansi
+ansi_colorizer.add_iro("pinkbg", "7;35;47")
+ansi_colorizer.add_iro("pink", "1;35")
+
+# term
+term_colorizer.add_iro("orange", "172")
+term_colorizer.add_iro("redbg", "197", True)
+```
 ```sh
 Usage: text_colorizer.py [OPTIONS]
 
