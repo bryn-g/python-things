@@ -1,9 +1,9 @@
 # python-things
 
 🐍 Pieces of Python code and things.
-#### text_colorizer.py
+#### random_text_colorizer.py
 ```sh
-Usage: text_colorizer.py [OPTIONS] TEXT
+Usage: random_text_colorizer.py [OPTIONS] TEXT
 
   A simple script to randomly colorize text.
 
