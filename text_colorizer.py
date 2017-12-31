@@ -63,7 +63,7 @@ class TermTextColorizer(IroList):
         pad_to = 19
         row_string = ""
         for i in range(256):
-            row_string += f" {cls.term_color_text(str(i), str(i), bg)} "
+            row_string += f" {cls.code(str(i), str(i), bg)} "
 
             if i % 16 == 0 and i != 0:
                 print(f"{row_string}")
