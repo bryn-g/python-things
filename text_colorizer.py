@@ -46,13 +46,14 @@ class TermTextColorizer(IroList):
 
     # 0-255 (bg=True|False)
     @classmethod
-    def term_color_text(cls, code, text, bg=False):
-        if int(code) >=0 and int(code) < 256:
+    #term_color_text
+    def code(cls, text, term_code, bg=False):
+        if int(term_code) >=0 and int(term_code) < 256:
             text_code = cls.TERM_TEXT_PRE_CODE
             if bg:
                 text_code = cls.TERM_BACKGROUND_PRE_CODE
 
-            return f"{text_code}{code}m{text}{cls.TERM_POST_CODE}"
+            return f"{text_code}{term_code}m{text}{cls.TERM_POST_CODE}"
         else:
             return text
 
@@ -93,9 +94,9 @@ class ANSITextColorizer(IroList):
 
     # 0-8;30-38;40-48
     @classmethod
-    def ansi_color_text(cls, text, code):
+    def code(cls, text, ansi_code):
         if self.ANSI_CODE_PATTERN.match(code):
-            return f"{cls.ANSI_TEXT_PRE_CODE}{code}m{text}{cls.ANSI_TEXT_POST_CODE}"
+            return f"{cls.ANSI_TEXT_PRE_CODE}{ansi_code}m{text}{cls.ANSI_TEXT_POST_CODE}"
         else:
             return text
 
