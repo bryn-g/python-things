@@ -3,7 +3,7 @@ import click
 import colorama
 from colorama import Fore, Back, Style
 
-class TextColorizer(object):
+class RandomTextColorizer(object):
     FORE_COLOR_LIST = (Fore.BLACK, Fore.RED, Fore.GREEN, Fore.YELLOW, Fore.BLUE, Fore.MAGENTA, Fore.CYAN, Fore.WHITE)
     BACK_COLOR_LIST = (Back.BLACK, Back.RED, Back.GREEN, Back.YELLOW, Back.BLUE, Back.MAGENTA, Back.CYAN, Back.WHITE)
     STYLE_LIST = (Style.DIM, Style.NORMAL, Style.BRIGHT)
@@ -65,9 +65,6 @@ class TextColorizer(object):
                 else:
                     colorized_value += self.get_random_fore_style()
 
-            #if case:
-            #    char = get_random_case(char)
-
             colorized_value += char
             char_index += 1
 
@@ -106,7 +103,7 @@ def main(text, back, words, case):
             temp_text += get_random_case(char)
         text = temp_text
 
-    colorizer = TextColorizer(text)
+    colorizer = RandomTextColorizer(text)
     colorizer.randomly_colorize(back, words)
     print(f"{colorizer.colorized_text}")
 
