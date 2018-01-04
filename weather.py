@@ -83,12 +83,26 @@ def print_current_weather(location, api_key, units, time, json, query):
         print(f"{Fore.CYAN}{'weather:':<{pad_to}s}{Fore.WHITE}{weather}")
         print(f"{Fore.RED}{'wind:':<{pad_to}s}{Fore.WHITE}{wind} m/s")
 
-@click.command()
-@click.argument('location')
+@click.group()
 @click.option(
     '--api-key', '-a',
+    type=str,
+    envvar="OPENWEATHERMAP_KEY",
     help='open weather map api key'
 )
+@click.pass_context
+def main(ctx, api_key):
+    """
+    A simple weather script using the open weather map api.
+
+    API reference: http://openweathermap.org/api
+    """
+    ctx.obj = {
+        'api_key': api_key
+    }
+
+@main.command()
+@click.argument('location')
 @click.option(
     '--units', '-u', default='metric',
     type=click.Choice(['standard', 'metric', 'imperial']),
@@ -107,21 +121,15 @@ def print_current_weather(location, api_key, units, time, json, query):
     '--query', '-q', is_flag=True,
     help='print api query'
 )
-def main(location, api_key, units, time, json, query):
+@click.pass_context
+def current(ctx, location, units, time, json, query):
     """
-    A simple weather script using the open weather map api. Location accepts a town/city name and
-    optionally an ISO 3166 country code. e.g 'Melbourne' or 'Melbourne, AU'
-
-    API reference: http://openweathermap.org/api
+    get the current weather. location can be a town/city name and optionally an ISO 3166 country code.
+    e.g 'Melbourne' or 'Melbourne, AU'
     """
     colorama.init(autoreset=True)
 
-    if api_key:
-        owm_api_key = api_key
-    else:
-        owm_api_key = os.environ.get('OPENWEATHERMAP_KEY', 'None')
-
-    print_current_weather(location, owm_api_key, units, time, json, query)
+    print_current_weather(location, ctx.obj['api_key'], units, time, json, query)
 
 if __name__ == "__main__":
     main()
