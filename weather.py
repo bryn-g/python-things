@@ -14,9 +14,6 @@ def print_json(json_block, sort=True, indents=4):
 
     return None
 
-def print_formatted_string(field_color, field_name, pad_to, value_color, value):
-    print(f"{field_color}{field_name:<{pad_to}s}{value_color}{value}")
-
 def print_current_weather(location, api_key, units, time, json, query):
     owm_api_url = 'https://api.openweathermap.org/data/2.5/weather'
 
@@ -55,11 +52,6 @@ def print_current_weather(location, api_key, units, time, json, query):
 
         country = response.json()['sys']['country']
 
-        # sunrise_unix_timestamp = response.json()['sys']['sunrise']
-        # sunrise = datetime.datetime.fromtimestamp(int(sunrise_unix_timestamp)).strftime('%H:%M')
-        # sunset_unix_timestamp = response.json()['sys']['sunset']
-        # sunset = datetime.datetime.fromtimestamp(int(sunset_unix_timestamp)).strftime('%H:%M')
-
         temp = response.json()['main']['temp']
 
         weather = ""
@@ -90,16 +82,50 @@ def print_current_weather(location, api_key, units, time, json, query):
     envvar="OPENWEATHERMAP_KEY",
     help='open weather map api key'
 )
+@click.option(
+    '--config', '-c',
+    type=click.Path(),
+    default='~/.owm_api_key.cfg',
+)
 @click.pass_context
-def main(ctx, api_key):
+def main(ctx, api_key, config):
     """
     A simple weather script using the open weather map api.
 
     API reference: http://openweathermap.org/api
     """
+    config_file = os.path.expanduser(config)
+
+    if not api_key and os.path.exists(config_file):
+        print(f"reading config: {config_file}")
+        with open(config_file) as cfg:
+            config_json = json.load(cfg)
+            api_key = config_json['api_key']
+
     ctx.obj = {
+        'api_key': api_key,
+        'config': config_file
+    }
+
+@main.command()
+@click.pass_context
+def save_config(ctx):
+    """
+    Save API key
+    """
+    config_file = ctx.obj['config']
+
+    api_key = click.prompt(
+        "save API key",
+        default=ctx.obj.get('api_key', '')
+    )
+
+    config_json = {
         'api_key': api_key
     }
+
+    with open(config_file, 'w') as cfg:
+        json.dump(config_json, cfg)
 
 @main.command()
 @click.argument('location')
