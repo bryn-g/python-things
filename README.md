@@ -1,62 +1,7 @@
 # python-things
 
 🐍 Pieces of Python code and things.
-#### text_colorizer.py
-```python (3.6)``` ```click (6.7)```
 
-Uses a class called IroList to save colors by label. The word 'iro' is Japanese romanji for color.
-```python
-# code to set colors
-ansi_colorizer = ANSITextColorizer()
-term_colorizer = TermTextColorizer()
-
-# ansi
-ansi_colorizer.add_iro("pinkbg", "7;35;47")
-ansi_colorizer.add_iro("pink", "1;35")
-
-# term
-term_colorizer.add_iro("orange", "172")
-term_colorizer.add_iro("redbg", "197", True)
-```
-```sh
-Usage: text_colorizer.py [OPTIONS]
-
-  A simple script to colorize text using ansi or terminal color codes.
-
-Options:
-  -txt, --text TEXT  example colorizer text
-  -t, --tables       print ansi color tables
-  --help             Show this message and exit.
-```
-```sh
-ansi colorizer examples
-
-ansi_colorizer.iro(text, 'pinkbg'): This is a test.
-ansi_colorizer.set_iro: pink
-ansi_colorizer.iro(text): This is a test.
-ansi iro list: {'pinkbg': ['\x1b[7;35;47m', '\x1b[0m'], 'pink': ['\x1b[1;35m', '\x1b[0m']}
-
-term colorizer examples
-
-term_colorizer.iro(text, 'orange'): This is a test.
-term_colorizer.iro(text, 'redbg'): This is a test.
-term_colorizer.set_iro: orange
-term_colorizer.iro(text): This is a test.
-term iro list: {'orange': ['\x1b[38;5;172m', '\x1b[0m'], 'redbg': ['\x1b[48;5;197m', '\x1b[0m']}
-```
-#### random_text_colorizer.py
-```python (3.6)``` ```click (6.7)``` ```colorama (0.3.9)```
-```sh
-Usage: random_text_colorizer.py [OPTIONS] TEXT
-
-  A simple script to randomly colorize text.
-
-Options:
-  -b, --back   include back colors
-  -w, --words  color words instead of letters
-  -c, --case   randomize case of letters
-  --help       Show this message and exit.
-```
 #### weather.py
 ```python (3.6)``` ```click (6.7)``` ```colorama (0.3.9)```
 
